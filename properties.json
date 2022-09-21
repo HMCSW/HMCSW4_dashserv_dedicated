@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "team.service.loginInService": "site.cp.teams.permission.service.loginInService"
+  },
+  "disableDefaultActions": [],
+  "neededExtensions": [],
+  "neededHostSettings": ["autoLogin"],
+  "neededProductSettings": [],
+  "actions": [],
+  "apiPath": []
+}

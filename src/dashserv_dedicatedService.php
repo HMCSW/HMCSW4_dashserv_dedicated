@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use hmcsw\service\general\discordService;
 use hmcsw\objects\user\teams\service\Service;
 use hmcsw\service\module\moduleServiceRepository;
+use hmcsw\exception\serviceAuthorizationException;
 use hmcsw\objects\user\teams\service\ServiceRepository;
 
 class dashserv_dedicatedService implements ServiceRepository
@@ -65,7 +66,7 @@ class dashserv_dedicatedService implements ServiceRepository
       'traffic' => 0,
       'bandwidth' => 1,
       'disk' => 0,
-      "os" => "Debian-11",
+      "os" => 295,
       "hostname" => $subdomain,
     );
 
@@ -157,6 +158,12 @@ class dashserv_dedicatedService implements ServiceRepository
       $host = $this->getService()->hostOBJ;
 
       $dsClient = new dashservApiClient($host->auth['password']);
+      try {
+        $accountData = $dsClient->account()->getUserInfo();
+      } catch (GuzzleException $e) {
+        throw new serviceAuthorizationException($e->getMessage(), $e->getCode(), $e->getTrace());
+      }
+
       $this->externalOBJ = $dsClient;
       return $dsClient;
     }

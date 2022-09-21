@@ -62,7 +62,7 @@ class dashserv_dedicated implements moduleServiceRepository
 
   public function getInstance (Service $service): ServiceRepository
   {
-    return new dashserv_dedicatedService($this, $service);
+    return new dashserv_dedicatedService($service, $this);
   }
 
 }
