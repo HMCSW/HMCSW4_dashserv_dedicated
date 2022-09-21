@@ -1,0 +1,5 @@
+{
+  "require": {
+    "dashserv/php-api-sdk": "*"
+  }
+}
