@@ -75,8 +75,7 @@ class dashserv_dedicatedService implements ServiceRepository
       if (!$server->isSuccessfull()) {
         return ["success" => false, "response" => ["error_code" => 500, "error_message" => "unknown error", "error_response" => $server->getData()]];
       }
-      $statement = Services::getDatabaseService()->prepare("UPDATE services SET external_id = ?, host_id = ?, external_name = ? WHERE service_id = ?");
-      $statement->execute([$server->getData(), $host_id, $subdomain, $this->getService()->service_id]);
+      $statement = Services::getDatabaseService()->prepare("UPDATE services SET external_id = ?, host_id = ?, external_name = ? WHERE service_id = ?", [$server->getData(), $host_id, $subdomain, $this->getService()->service_id]);
       return ["success" => true];
     } catch (GuzzleException $e) {
       return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
