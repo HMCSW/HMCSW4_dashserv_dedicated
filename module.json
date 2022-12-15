@@ -3,7 +3,7 @@
   "description": "DashServ Dedicated Server as an Service integration",
   "identifier": "dashserv_dedicated",
   "title": "DashServ Dedicated Server",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "service",
   "authors": [
     {
@@ -11,6 +11,6 @@
       "email": "moritz.walter@the-systems.eu"
     }
   ],
-  "minimumCoreVersion": "48",
+  "minimumCoreVersion": "56",
   "module_id": 11
 }
