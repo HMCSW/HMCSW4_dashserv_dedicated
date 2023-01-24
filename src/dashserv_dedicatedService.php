@@ -5,20 +5,20 @@ namespace hmcswModule\dashserv_dedicated\src;
 use hmcsw\service\Services;
 use dashserv\api\dashservApiClient;
 use GuzzleHttp\Exception\GuzzleException;
-use hmcsw\service\general\discordService;
+use hmcsw\service\general\DiscordService;
 use hmcsw\objects\user\teams\service\Service;
-use hmcsw\service\module\moduleServiceRepository;
-use hmcsw\exception\serviceAuthorizationException;
+use hmcsw\service\module\ModuleServiceRepository;
+use hmcsw\exception\ServiceAuthorizationException;
 use hmcsw\objects\user\teams\service\ServiceRepository;
 
 class dashserv_dedicatedService implements ServiceRepository
 {
   public ?dashservApiClient $externalOBJ = null;
   protected Service $service;
-  protected moduleServiceRepository $module;
+  protected ModuleServiceRepository $module;
   protected array $get = ["success" => false];
 
-  public function __construct (Service $service, moduleServiceRepository $module)
+  public function __construct (Service $service, ModuleServiceRepository $module)
   {
     $this->service = $service;
     $this->module = $module;
@@ -46,7 +46,7 @@ class dashserv_dedicatedService implements ServiceRepository
     return $this->service;
   }
 
-  public function getModule (): moduleServiceRepository
+  public function getModule (): ModuleServiceRepository
   {
     return $this->module;
   }
@@ -84,7 +84,7 @@ class dashserv_dedicatedService implements ServiceRepository
 
   public function onDelete (bool $reinstall = false): array
   {
-    discordService::addMessageToQueue("service", "Delete Service of ".$this->service->service_id."@".$this->service->type['hostType']." require manuel delete.");
+    DiscordService::addMessageToQueue("service", "Delete Service of ".$this->service->service_id."@".$this->service->type['hostType']." require manuel delete.");
     return ["success" => true, "response" => []];
   }
 
@@ -160,7 +160,7 @@ class dashserv_dedicatedService implements ServiceRepository
       try {
         $accountData = $dsClient->account()->getUserInfo();
       } catch (GuzzleException $e) {
-        throw new serviceAuthorizationException($e->getMessage(), $e->getCode(), $e->getTrace());
+        throw new ServiceAuthorizationException($e->getMessage(), $e->getCode(), $e->getTrace());
       }
 
       $this->externalOBJ = $dsClient;

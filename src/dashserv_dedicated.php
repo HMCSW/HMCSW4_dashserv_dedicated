@@ -3,12 +3,12 @@
 namespace hmcswModule\dashserv_dedicated\src;
 
 use hmcsw\service\config\ConfigService;
-use hmcsw\service\templates\twigService;
+use hmcsw\service\templates\TwigService;
 use hmcsw\objects\user\teams\service\Service;
-use hmcsw\service\module\moduleServiceRepository;
+use hmcsw\service\module\ModuleServiceRepository;
 use hmcsw\objects\user\teams\service\ServiceRepository;
 
-class dashserv_dedicated implements moduleServiceRepository
+class dashserv_dedicated implements ModuleServiceRepository
 {
   protected Service $service;
   protected array $config;
@@ -43,7 +43,7 @@ class dashserv_dedicated implements moduleServiceRepository
     $args['domain'] = $get['response'];
     $args['apiUrl'] = ConfigService::getUrl("apiAll");
 
-    twigService::renderPage('cp/teams/services/plesk.twig', $args);
+    TwigService::renderPage('cp/teams/services/plesk.twig', $args);
   }
 
   public function getMessages (string $lang): array|bool
