@@ -41,7 +41,6 @@ class dashserv_dedicated implements ModuleServiceRepository
     $get = $serviceRepository->getData();
 
     $args['domain'] = $get['response'];
-    $args['apiUrl'] = ConfigService::getUrl("apiAll");
 
     TwigService::renderPage('cp/teams/services/plesk.twig', $args);
   }
