@@ -2,11 +2,10 @@
 
 namespace hmcswModule\dashserv_dedicated\src;
 
-use hmcsw\service\config\ConfigService;
-use hmcsw\service\templates\TwigService;
+use hmcsw\controller\web\cp\CPController;
 use hmcsw\objects\user\teams\service\Service;
-use hmcsw\service\module\ModuleServiceRepository;
 use hmcsw\objects\user\teams\service\ServiceRepository;
+use hmcsw\service\module\ModuleServiceRepository;
 
 class dashserv_dedicated implements ModuleServiceRepository
 {
@@ -36,13 +35,13 @@ class dashserv_dedicated implements ModuleServiceRepository
     return json_decode(file_get_contents(__DIR__.'/../properties.json'), true);
   }
 
-  public function loadPage(array $args, ServiceRepository $serviceRepository): void
+  public function loadPage(array $args, ServiceRepository $serviceRepository, CPController $CPController): void
   {
     $get = $serviceRepository->getData();
 
     $args['domain'] = $get['response'];
 
-    TwigService::renderPage('cp/teams/services/plesk.twig', $args);
+    $CPController->renderPage('cp/teams/services/plesk.twig', $args);
   }
 
   public function getMessages (string $lang): array|bool
