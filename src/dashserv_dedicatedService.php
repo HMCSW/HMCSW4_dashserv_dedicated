@@ -2,14 +2,14 @@
 
 namespace hmcswModule\dashserv_dedicated\src;
 
-use hmcsw\service\Services;
 use dashserv\api\dashservApiClient;
 use GuzzleHttp\Exception\GuzzleException;
-use hmcsw\service\general\DiscordService;
-use hmcsw\objects\user\teams\service\Service;
-use hmcsw\service\module\ModuleServiceRepository;
 use hmcsw\exception\ServiceAuthorizationException;
+use hmcsw\objects\user\teams\service\Service;
 use hmcsw\objects\user\teams\service\ServiceRepository;
+use hmcsw\service\general\DiscordService;
+use hmcsw\service\module\ModuleServiceRepository;
+use hmcsw\service\Services;
 
 class dashserv_dedicatedService implements ServiceRepository
 {
@@ -23,7 +23,7 @@ class dashserv_dedicatedService implements ServiceRepository
     $this->service = $service;
     $this->module = $module;
 
-    if ($this->service->hostOBJ->host_id != 0) $this->externalOBJ = $this->getExternalOBJ();
+    if ($this->service->host->host_id != 0) $this->externalOBJ = $this->getExternalOBJ();
     $this->get = $this->get();
   }
 
@@ -53,7 +53,7 @@ class dashserv_dedicatedService implements ServiceRepository
 
   public function onCreate (bool $reinstall = false): array
   {
-    $host = $this->getService()->hostOBJ;
+    $host = $this->getService()->host;
     $host_name = $host->name;
     $host_subdomain = $host->subdomain;
     $host_id = $host->host_id;
@@ -154,7 +154,7 @@ class dashserv_dedicatedService implements ServiceRepository
     if (!is_null($this->externalOBJ)) {
       return $this->externalOBJ;
     } else {
-      $host = $this->getService()->hostOBJ;
+      $host = $this->getService()->host;
 
       $dsClient = new dashservApiClient($host->auth['password']);
       try {
