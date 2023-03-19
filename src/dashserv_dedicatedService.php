@@ -5,6 +5,7 @@ namespace hmcswModule\dashserv_dedicated\src;
 use dashserv\api\dashservApiClient;
 use GuzzleHttp\Exception\GuzzleException;
 use hmcsw\exception\ServiceAuthorizationException;
+use hmcsw\exception\ServiceException;
 use hmcsw\objects\user\teams\service\Service;
 use hmcsw\objects\user\teams\service\ServiceRepository;
 use hmcsw\service\general\DiscordService;
@@ -73,75 +74,74 @@ class dashserv_dedicatedService implements ServiceRepository
     try {
       $server = $this->getExternalOBJ()->order()->placeOrder("dedicated-server:".$package['external_name'], null, "kc7aV", $orderArray);
       if (!$server->isSuccessfull()) {
-        return ["success" => false, "response" => ["error_code" => 500, "error_message" => "unknown error", "error_response" => $server->getData()]];
+        throw new ServiceException("Error while creating server", 0, $server->getData());
       }
-      $statement = Services::getDatabaseService()->prepare("UPDATE services SET external_id = ?, host_id = ?, external_name = ? WHERE service_id = ?", [$server->getData(), $host_id, $subdomain, $this->getService()->service_id]);
-      return ["success" => true];
+
+      Services::getDatabaseService()->prepare("UPDATE services SET external_id = ?, host_id = ?, external_name = ? WHERE service_id = ?", [$server->getData(), $host_id, $subdomain, $this->getService()->service_id]);
+
+      return ['external_id' => 0, 'external_name' => $subdomain, "host_id" => $host_id];
     } catch (GuzzleException $e) {
-      return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
+      throw new ServiceException("Error while creating server", $e->getCode());
     }
   }
 
-  public function onDelete (bool $reinstall = false): array
+  public function onDelete (bool $reinstall = false): void
   {
     DiscordService::addMessageToQueue("service", "Delete Service of ".$this->service->service_id."@".$this->service->type['hostType']." require manuel delete.");
-    return ["success" => true, "response" => []];
   }
 
-  public function onEnable (): array
+  public function onEnable (): void
   {
     try {
-      $server = $this->getExternalOBJ()->dedicatedServer()->start($this->getService()->external['id']);
-      return ["success" => true];
+      $server = $this->getExternalOBJ()->dedicatedServer()->start($this->getService()->external_id);
     } catch (GuzzleException $e) {
-      return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
+      throw new ServiceException("Error while starting server", $e->getCode());
     }
   }
 
-  public function onDisable (): array
+  public function onDisable (): void
   {
     try {
-      $server = $this->getExternalOBJ()->dedicatedServer()->stop($this->getService()->external['id']);
-      return ["success" => true];
+      $server = $this->getExternalOBJ()->dedicatedServer()->stop($this->getService()->external_id);
     } catch (GuzzleException $e) {
-      return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
+      throw new ServiceException("Error while stopping server", $e->getCode());
     }
   }
 
-  public function onTerminate (): array
+  public function onTerminate (): void
   {
-    return ["success" => true];
+
   }
 
-  public function onTerminateInstant (): array
+  public function onTerminateInstant (): void
   {
-    return ["success" => true];
+
   }
 
-  public function onWithdrawTerminate (): array
+  public function onWithdrawTerminate (): void
   {
-    return ["success" => true];
+
   }
 
-  public function onExtend (int $time): array
+  public function onExtend (int $time): void
   {
-    return ["success" => true];
+
   }
 
   public function onLogin (string $key): array
   {
     try {
       $url = $this->getExternalOBJ()->dedicatedServer()->getConsole($this->getService()->external['id'])->getData()->getData()->url;
-      return ["success" => true, "response" => ["url" => $url, "type" => "iframe"]];
+      return ["url" => $url, "type" => "iframe"];
     } catch (GuzzleException $e) {
-      return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
+      throw new ServiceException("Error while getting console url", $e->getCode());
     }
 
   }
 
-  public function onSetName (string $name): array
+  public function onSetName (string $name): void
   {
-    return ["success" => true];
+
   }
 
   public function getData (): array
