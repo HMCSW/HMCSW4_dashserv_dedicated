@@ -87,7 +87,7 @@ class dashserv_dedicatedService implements ServiceRepository
 
   public function onDelete (bool $reinstall = false): void
   {
-    DiscordService::addMessageToQueue("service", "Delete Service of ".$this->service->service_id."@".$this->service->type['hostType']." require manuel delete.");
+    DiscordService::addMessageToQueue("service", "Delete Service of ".$this->service->service_id."@".$this->service->product->getHostType()." require manuel delete.");
   }
 
   public function onEnable (): void
