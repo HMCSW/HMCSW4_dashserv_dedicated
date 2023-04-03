@@ -32,7 +32,7 @@ class dashserv_dedicatedService implements ServiceRepository
     if($this->get['success']) return $this->get;
 
     try {
-      $server = $this->getExternalOBJ()->dedicatedServer()->get($this->getService()->external['id']);
+      $server = $this->getExternalOBJ()->dedicatedServer()->get($this->getService()->external_id);
     } catch (GuzzleException $e) {
       return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
     }
@@ -131,7 +131,7 @@ class dashserv_dedicatedService implements ServiceRepository
   public function onLogin (string $key): array
   {
     try {
-      $url = $this->getExternalOBJ()->dedicatedServer()->getConsole($this->getService()->external['id'])->getData()->getData()->url;
+      $url = $this->getExternalOBJ()->dedicatedServer()->getConsole($this->getService()->external_id)->getData()->getData()->url;
       return ["url" => $url, "type" => "iframe"];
     } catch (GuzzleException $e) {
       throw new ServiceException("Error while getting console url", $e->getCode());
