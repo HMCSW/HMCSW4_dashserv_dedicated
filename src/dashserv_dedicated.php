@@ -3,6 +3,9 @@
 namespace hmcswModule\dashserv_dedicated\src;
 
 use hmcsw\controller\web\cp\CPController;
+use hmcsw\controller\web\error\error;
+use hmcsw\exception\InvalidRequestException;
+use hmcsw\exception\NotEnoughPermissionException;
 use hmcsw\objects\user\teams\service\Service;
 use hmcsw\objects\user\teams\service\ServiceRepository;
 use hmcsw\service\module\ModuleServiceRepository;
@@ -37,11 +40,20 @@ class dashserv_dedicated implements ModuleServiceRepository
 
   public function loadPage(array $args, ServiceRepository $serviceRepository, CPController $CPController): void
   {
+    if (isset($_GET['vnc'])) {
+      try {
+        $action = $serviceRepository->getService()->createLoginInSession();
+        header('Location: ' . $action['url']);
+      } catch (InvalidRequestException|NotEnoughPermissionException $e) {
+        (new error())->serverError($e->getCode(), $e->getMessage());
+      }
+      die();
+    }
     $get = $serviceRepository->getData();
 
-    $args['domain'] = $get['response'];
+    $args['data'] = $get;
 
-    $CPController->renderPage('cp/teams/services/plesk.twig', $args);
+    $CPController->renderPage('cp/teams/services/dashServDedi.twig', $args);
   }
 
   public function getMessages (string $lang): array|bool

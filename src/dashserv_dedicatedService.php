@@ -127,7 +127,7 @@ class dashserv_dedicatedService implements ServiceRepository
   public function onLogin (string $key): array
   {
     try {
-      $url = $this->getExternalOBJ()->dedicatedServer()->getConsole($this->getService()->external_id)->getData()->getData()->url;
+      $url = $this->getExternalOBJ()->dedicatedServer()->getConsole($this->getService()->external_id)->getData()->url;
       return ["url" => $url, "type" => "iframe"];
     } catch (GuzzleException $e) {
       throw new ServiceException("Error while getting console url", $e->getCode());
