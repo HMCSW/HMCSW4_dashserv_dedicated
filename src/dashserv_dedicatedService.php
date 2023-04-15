@@ -17,28 +17,24 @@ class dashserv_dedicatedService implements ServiceRepository
   public ?dashservApiClient $externalOBJ = null;
   protected Service $service;
   protected ModuleServiceRepository $module;
-  protected array $get = ["success" => false];
+  protected array $get;
 
   public function __construct (Service $service, ModuleServiceRepository $module)
   {
     $this->service = $service;
     $this->module = $module;
-
-    if ($this->service->host->host_id != 0) $this->externalOBJ = $this->getExternalOBJ();
-    $this->get = $this->get();
   }
 
-  public function get(){
-    if($this->get['success']) return $this->get;
-
+  public function get(): array
+  {
     try {
       $server = $this->getExternalOBJ()->dedicatedServer()->get($this->getService()->external_id);
     } catch (GuzzleException $e) {
-      return ["success" => false, "response" => ["error_code" => $e->getCode(), "error_message" => $e->getMessage(), "error_response" => $e->getTrace()]];
+      throw new ServiceAuthorizationException($e->getMessage(), $e->getCode());
     }
     $data = $server->getData();
 
-    return ["success" => true, "response" => ["status" => $data->status, "device" => $data->device]];
+    return ["status" => $data->status, "device" => $data->device];
 
   }
 
