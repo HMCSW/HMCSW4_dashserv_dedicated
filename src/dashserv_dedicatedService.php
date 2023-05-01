@@ -56,7 +56,7 @@ class dashserv_dedicatedService implements ServiceRepository
     $host_id = $host->host_id;
 
     $subdomain = $this->getService()->service_id . "." . $host_name . "." . $host_subdomain;
-    $package = $this->getService()->package;
+    $package = $this->getService()->product->getPackage();
     $orderArray = array(
       'cpu' => 0,
       'ram' => 0,
