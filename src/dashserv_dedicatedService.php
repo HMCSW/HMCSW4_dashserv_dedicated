@@ -89,7 +89,7 @@ class dashserv_dedicatedService implements ServiceRepository
   public function onEnable (): void
   {
     try {
-      $server = $this->getExternalOBJ()->dedicatedServer()->start($this->getService()->external_id);
+      $this->getExternalOBJ()->dedicatedServer()->start($this->getService()->external_id);
     } catch (GuzzleException $e) {
       throw new ServiceException("Error while starting server", $e->getCode());
     }
@@ -152,7 +152,7 @@ class dashserv_dedicatedService implements ServiceRepository
     } else {
       $host = $this->getService()->host;
 
-      $dsClient = new dashservApiClient($host->auth['password']);
+      $dsClient = new dashservApiClient($host->password);
       try {
         $accountData = $dsClient->account()->getUserInfo();
       } catch (GuzzleException $e) {

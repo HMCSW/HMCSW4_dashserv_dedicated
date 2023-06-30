@@ -75,4 +75,13 @@ class dashserv_dedicated implements ModuleServiceRepository
     return new dashserv_dedicatedService($service, $this);
   }
 
+  public function getOrderConfigurations(): array
+  {
+    return [];
+  }
+
+  public function validOrderConfiguration(array $configuration): void
+  {
+    // TODO: Implement validOrderConfiguration() method.
+  }
 }
