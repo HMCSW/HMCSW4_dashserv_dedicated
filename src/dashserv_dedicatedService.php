@@ -8,6 +8,7 @@ use hmcsw\exception\ServiceAuthorizationException;
 use hmcsw\exception\ServiceException;
 use hmcsw\objects\user\teams\service\Service;
 use hmcsw\objects\user\teams\service\ServiceRepository;
+use hmcsw\objects\user\teams\Team;
 use hmcsw\service\general\DiscordService;
 use hmcsw\service\module\ModuleServiceRepository;
 use hmcsw\service\Services;
@@ -162,5 +163,10 @@ class dashserv_dedicatedService implements ServiceRepository
       $this->externalOBJ = $dsClient;
       return $dsClient;
     }
+  }
+
+  public function onSetTeam(Team $newTeam): void
+  {
+    // TODO: Implement onSetTeam() method.
   }
 }
